@@ -3,7 +3,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException, ElementClickInterceptedException, StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver.common.keys import Keys
-from tinderbotz.helpers.xpaths import content
+from tinderbotz.helpers.xpaths import *
 import time
 
 class LoginHelper:
@@ -16,7 +16,7 @@ class LoginHelper:
 
     def _click_login_button(self):
         try:
-            xpath = f'{content}/div/div[1]/div/main/div[1]/div/div/div/div/header/div/div[2]/div[2]/a'
+            xpath = xpath_login
             WebDriverWait(self.browser, self.delay).until(EC.presence_of_element_located(
                 (By.XPATH, xpath)))
             button = self.browser.find_element(By.XPATH, xpath)
@@ -33,7 +33,7 @@ class LoginHelper:
         self._click_login_button()
 
         # wait for google button to appear
-        xpath = '//*[@aria-label="Log in with Google"]'
+        xpath = xpath_continue_google
         try:
             WebDriverWait(self.browser, self.delay).until(EC.presence_of_element_located(
                 (By.XPATH, xpath)))
@@ -43,7 +43,7 @@ class LoginHelper:
         except TimeoutException:
             self._exit_by_time_out()
         except StaleElementReferenceException:
-            # page was still loading when attempting to click facebook login
+            # page was still loading when attempting to click google login
             time.sleep(4)
             self.browser.find_element(By.XPATH, xpath).click()
 
@@ -53,7 +53,7 @@ class LoginHelper:
             return self.login_by_google(email, password)
 
         try:
-            xpath = "//input[@type='email']"
+            xpath = xpath_google_email_input
             WebDriverWait(self.browser, self.delay).until(
                 EC.presence_of_element_located((By.XPATH, xpath)))
 
@@ -66,7 +66,7 @@ class LoginHelper:
             self._exit_by_time_out()
 
         try:
-            xpath = "//input[@type='password']"
+            xpath = xpath_google_password_input
             WebDriverWait(self.browser, self.delay).until(
                 EC.presence_of_element_located((By.XPATH, xpath)))
 
@@ -84,7 +84,7 @@ class LoginHelper:
         self._click_login_button()
 
         # wait for facebook button to appear
-        xpath = '//*[@aria-label="Log in with Facebook"]'
+        xpath = xpath_facebook_login_button
         try:
             WebDriverWait(self.browser, self.delay).until(EC.presence_of_element_located(
                 (By.XPATH, xpath)))
@@ -103,7 +103,7 @@ class LoginHelper:
             return self.login_by_facebook(email, password)
 
         try:
-            xpath_cookies = '//*[@data-cookiebanner="accept_button"]'
+            xpath_cookies = xpath_facebook_cookie_banner
 
             WebDriverWait(self.browser, self.delay).until(
             EC.presence_of_element_located((By.XPATH, xpath_cookies)))
@@ -114,9 +114,9 @@ class LoginHelper:
             pass
 
         try:
-            xpath_email = '//*[@id="email"]'
-            xpath_password = '//*[@id="pass"]'
-            xpath_button = '//*[@id="loginbutton"]'
+            xpath_email = xpath_facebook_email_input
+            xpath_password = xpath_facebook_password_input
+            xpath_button = xpath_facebook_login_button_click
 
             WebDriverWait(self.browser, self.delay).until(
                 EC.presence_of_element_located((By.XPATH, xpath_email)))
@@ -139,9 +139,9 @@ class LoginHelper:
     def login_by_sms(self, country, phone_number):
         self._click_login_button()
 
-        # wait for facebook button to appear
+        # wait for sms button to appear
+        xpath = xpath_sms_phone_number_button
         try:
-            xpath = '//*[@aria-label="Log in with phone number"]'
             WebDriverWait(self.browser, self.delay).until(EC.presence_of_element_located(
                 (By.XPATH, xpath)))
 
@@ -153,8 +153,8 @@ class LoginHelper:
         self._handle_prefix(country)
 
         # Fill in sms
+        xpath = xpath_sms_phone_number_input
         try:
-            xpath = '//*[@name="phone_number"]'
             WebDriverWait(self.browser, self.delay).until(EC.presence_of_element_located(
                     (By.XPATH, xpath)))
 
@@ -175,7 +175,7 @@ class LoginHelper:
     def _handle_prefix(self, country):
         self._accept_cookies()
 
-        xpath = '//div[@aria-describedby="phoneErrorMessage"]/div/div'
+        xpath = xpath_prefix_selection
         WebDriverWait(self.browser, self.delay).until(EC.presence_of_element_located(
             (By.XPATH, xpath)))
         btn = self.browser.find_element(By.XPATH, xpath)
@@ -225,8 +225,8 @@ class LoginHelper:
         time.sleep(5)
 
     def _accept_location_notification(self):
+        xpath = xpath_location_allow_button
         try:
-            xpath = '//*[@data-testid="allow"]'
             WebDriverWait(self.browser, self.delay).until(
                 EC.presence_of_element_located((By.XPATH, xpath)))
 
@@ -240,8 +240,8 @@ class LoginHelper:
             pass
 
     def _deny_overlayed_notifications(self):
+        xpath = xpath_notification_decline_button
         try:
-            xpath = '//*[@data-testid="decline"]'
             WebDriverWait(self.browser, self.delay).until(
                 EC.presence_of_element_located((By.XPATH, xpath)))
 
@@ -254,8 +254,8 @@ class LoginHelper:
             pass
 
     def _accept_cookies(self):
+        xpath = xpath_accept_cookies_button
         try:
-            xpath = '//*[@type="button"]'
             WebDriverWait(self.browser, self.delay).until(EC.presence_of_element_located(
                 (By.XPATH, xpath)))
             buttons = self.browser.find_elements(By.XPATH, xpath)

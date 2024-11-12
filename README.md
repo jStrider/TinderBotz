@@ -1,6 +1,23 @@
 # Tinderbotz
+
 **Consider giving a ⭐ if you like the project!**
+
 ## Project
+
+This is a fork of the main TinderBotz project, focusing on adding enhanced features using OpenAI's ChatGPT for generating pickup lines. 
+
+Also, I updated XPATHs to work with the latest version of Tinder.
+
+## How to Pickup Using ChatGPT
+
+To run this project, you need to create a `.env` file in the root directory with the following content:
+
+```
+OPENAI_API_KEY='your_openai_api_key_here'
+USER_DATA='C:\Users\juren\AppData\Local\Google\Chrome\User Data'
+```
+
+Replace `'your_openai_api_key_here'` with your actual OpenAI API key. This key is necessary for interacting with ChatGPT via the OpenAI API.
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
