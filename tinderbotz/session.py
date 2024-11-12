@@ -7,7 +7,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, ElementNotVisibleException
 from selenium.webdriver.common.by import By
-
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
 # some other imports :-)
 import os
@@ -17,7 +18,6 @@ import random
 import requests
 import atexit
 from pathlib import Path
-
 # Tinderbotz: helper classes
 from tinderbotz.helpers.geomatch import Geomatch
 from tinderbotz.helpers.match import Match
@@ -32,7 +32,7 @@ from tinderbotz.helpers.constants_helper import Printouts
 from tinderbotz.helpers.xpaths import *
 from tinderbotz.addproxy import get_proxy_extension
 
-
+import os
 class Session:
     HOME_URL = "https://www.tinder.com/app/recs"
 
@@ -73,7 +73,7 @@ class Session:
                 print("Ended session: {}".format(y))
             
             # Close browser properly
-            self.browser.quit()
+            # self.browser.quit()
 
         # Go further with the initialisation
         # Setting some options of the browser here below
@@ -83,17 +83,15 @@ class Session:
         # Create empty profile to avoid annoying Mac Popup
         if store_session:
             if not user_data:
-                user_data = f"{Path().absolute()}/chrome_profile/"
+                user_data = f"{Path().absolute()}\\chrome_profile"
             if not os.path.isdir(user_data):
                 os.mkdir(user_data)
 
             Path(f'{user_data}First Run').touch()
             options.add_argument(f"--user-data-dir={user_data}")
-
         #options.add_argument("--start-maximized")
         options.add_argument('--no-first-run --no-service-autorun --password-store=basic')
         options.add_argument("--lang=en-GB")
-
         if headless:
             options.headless = True
 
@@ -114,12 +112,14 @@ class Session:
 
         # Getting the chromedriver from cache or download it from internet
         print("Getting ChromeDriver ...")
+
         self.browser = uc.Chrome(options=options)  # ChromeDriverManager().install(),
-        # self.browser = webdriver.Chrome(options=options)
+       # self.browser = webdriver.Chrome(options=options)
+
         # self.browser.set_window_size(1250, 750)
 
         # clear the console based on the operating system you're using
-        #os.system('cls' if os.name == 'nt' else 'clear')
+        # os.system('cls' if os.name == 'nt' else 'clear')
 
         # Cool banner
         print(Printouts.BANNER.value)
