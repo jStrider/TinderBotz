@@ -76,7 +76,7 @@ class MatchHelper:
 
                 div = self.browser.find_element(By.XPATH, xpath)
 
-                list_refs = div.find_elements(By.XPATH, './/div/div/a')
+                list_refs = div.find_elements(By.XPATH, './/ul//li//a')
                 for index in range(len(list_refs)):
                     try:
                         ref = list_refs[index].get_attribute('href')
@@ -423,8 +423,15 @@ class MatchHelper:
             self._open_chat(chatid)
 
         try:
-            xpath = f'{content}/div/div[1]/div/main/div[1]/div/div/div/div[2]/div/div[1]/div/div/div[2]/div[1]/div/div[1]/div[1]/h1'
-            element = self.browser.find_element(By.XPATH, xpath)
+            xpath = f"{content}//*[contains(text(),'Start the convo with')]"
+            element_start_convo = self.browser.find_element(By.XPATH, xpath)
+            # if element start convo is not empty, then we take the first span child
+            if element_start_convo.text:
+                element = element_start_convo.find_element(By.TAG_NAME, "span")
+            else:
+                # create exception to avoid infinite loop
+                raise Exception("No name found")
+                
             WebDriverWait(self.browser, self.delay).until(EC.presence_of_element_located((By.XPATH, xpath)))
             return element.text
         except Exception as e:
@@ -514,8 +521,16 @@ class MatchHelper:
             self._open_chat(chatid)
 
         try:
-            xpath = f'{content}/div/div[1]/div/main/div[1]/div/div/div/div[2]/div/div[1]/div/div/div[2]/div[2]/div'
-            return self.browser.find_element(By.XPATH, xpath).text
+            xpath = f"{content}//*[contains(text(),'About me')]"
+            element_about_me = self.browser.find_element(By.XPATH, xpath)
+            # if element about me is not empty, then we take the parent.child[1] item
+            if element_about_me.text:
+                element = element_about_me.find_element(By.XPATH, "../../div[2]")
+            else:
+                # create exception to avoid infinite loop
+                raise Exception("No bio found")
+            
+            return element.text
         except:
             # no bio included?
             return None
