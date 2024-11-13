@@ -4,9 +4,10 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import *
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
+
 import time
 import re
-from tinderbotz.helpers.xpaths import content
+from tinderbotz.helpers.xpaths import *
 from datetime import datetime
 
 class GeomatchHelper:
@@ -321,7 +322,7 @@ class GeomatchHelper:
         image_urls = []
 
         # only get url of first few images, and not click all bullets to get all image
-        elements = self.browser.find_elements(By.XPATH, "//div[@aria-label='Profile slider']")
+        elements = self.browser.find_elements(By.XPATH, xpath_profile_slider)
         for element in elements:
             image_url = element.value_of_css_property('background-image').split('\"')[1]
             if image_url not in image_urls:
@@ -345,7 +346,7 @@ class GeomatchHelper:
                 btn.click()
                 time.sleep(1)
 
-                elements = self.browser.find_elements(By.XPATH, "//div[@aria-label='Profile slider']")
+                elements = self.browser.find_elements(By.XPATH, xpath_profile_slider)
                 for element in elements:
                     image_url = element.value_of_css_property('background-image').split('\"')[1]
                     if image_url not in image_urls:
@@ -357,7 +358,7 @@ class GeomatchHelper:
         except TimeoutException:
             # there is only 1 image, so no bullets to iterate through
             try:
-                element = self.browser.find_element(By.XPATH, "//div[@aria-label='Profile slider']")
+                element = self.browser.find_element(By.XPATH, xpath_profile_slider)
                 image_url = element.value_of_css_property('background-image').split('\"')[1]
                 if image_url not in image_urls:
                     image_urls.append(image_url)

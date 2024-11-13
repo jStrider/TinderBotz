@@ -8,7 +8,7 @@ import time
 from tinderbotz.helpers.match import Match
 from tinderbotz.helpers.constants_helper import Socials
 from tinderbotz.helpers.loadingbar import LoadingBar
-from tinderbotz.helpers.xpaths import content, modal_manager
+from tinderbotz.helpers.xpaths import *
 
 class MatchHelper:
 
@@ -543,7 +543,7 @@ class MatchHelper:
             image_urls = []
 
             # only get url of first few images, and not click all bullets to get all image
-            elements = self.browser.find_elements(By.XPATH, "//div[@aria-label='Profile slider']")
+            elements = self.browser.find_elements(By.XPATH, xpath_profile_slider)
             for element in elements:
                 image_url = element.value_of_css_property('background-image').split('\"')[1]
                 if image_url not in image_urls:
@@ -565,7 +565,7 @@ class MatchHelper:
                 btn.click()
                 time.sleep(1)
 
-                elements = self.browser.find_elements(By.XPATH, "//div[@aria-label='Profile slider']")
+                elements = self.browser.find_elements(By.XPATH, xpath_profile_slider)
                 for element in elements:
                     image_url = element.value_of_css_property('background-image').split('\"')[1]
                     if image_url not in image_urls:
